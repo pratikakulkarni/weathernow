@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Weather Now</string>
+
+    <string name="send_log_to_developer">Send Log to Developer</string>
+    <string name="_hiphen">_</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="internal_server">Internal server error encountered.</string>
+    <string name="ok_button">OK</string>
+    <string name="unauthenticated_error">Unauthenticated. Please check config and try again.</string>
+    <string name="unauthenticated">Unauthenticated</string>
+    <string name="message">Message</string>
+    <string name="connection_timeout_message">Connection timed out. Please check connectivity try again.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_activity_launch">LaunchActivity</string>
+    <string name="next">NEXT</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="weather">WEATHER</string>
+    <string name="now">NOW</string>
+    <string name="by_pratik">by Pratik</string>
 </resources>
