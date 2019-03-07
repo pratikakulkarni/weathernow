@@ -23,6 +23,7 @@ import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.finzy.weathernow.R;
+import com.finzy.weathernow.models.PrefLocation;
 import com.finzy.weathernow.viewmodel.WeatherViewModel;
 import com.finzy.weathernow.viewmodel.factory.WeatherFactory;
 
@@ -39,7 +40,7 @@ public class WeatherFragment extends Fragment {
     @BindView(R.id.textView_Time)
     TextView textView_Time;
 
-    Location location;
+    PrefLocation prefLocation;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -69,20 +70,24 @@ public class WeatherFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        getWeatherUpdates(location);
+        getWeatherUpdates(prefLocation);
 
         locationManager = (LocationManager) Objects.requireNonNull(getActivity()).getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //Location is not enabled so showing default city as Bangalore
+            //PrefLocation is not enabled so showing default city as Bangalore
             getWeatherUpdates(null);
             return view;
         } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-                    WeatherFragment.this.location = location;
-                    getWeatherUpdates(location);
+                    PrefLocation prefLocation = new PrefLocation();
+                    prefLocation.setLatitide(location.getLatitude());
+                    prefLocation.setLongitude(location.getLongitude());
+
+                    WeatherFragment.this.prefLocation = prefLocation;
+                    getWeatherUpdates(prefLocation);
                     locationManager.removeUpdates(this);
                 }
 
@@ -106,9 +111,9 @@ public class WeatherFragment extends Fragment {
         return view;
     }
 
-    private void getWeatherUpdates(Location location) {
+    private void getWeatherUpdates(PrefLocation prefLocation) {
         final WeatherViewModel viewModel = ViewModelProviders
-                .of(this, new WeatherFactory(getActivity().getApplication(), getActivity(), location))
+                .of(this, new WeatherFactory(getActivity().getApplication(), getActivity(), prefLocation))
                 .get(WeatherViewModel.class);
 
         viewModel.getNewsResponseObservable().observe(this, currentWeather -> {
@@ -118,7 +123,11 @@ public class WeatherFragment extends Fragment {
                 Toast.makeText(getActivity(), currentWeather.getName(), Toast.LENGTH_SHORT).show();
             }
         });
-        textView_Time.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_forecastFragment));
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("location", prefLocation);
+
+        textView_Time.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_forecastFragment, bundle));
     }
 
     public void onButtonPressed(Uri uri) {

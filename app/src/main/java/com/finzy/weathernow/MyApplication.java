@@ -1,11 +1,11 @@
 package com.finzy.weathernow;
 
 import android.app.Application;
-import android.content.Intent;
 
 public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
+
         // Setup handler for uncaught exceptions.
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override

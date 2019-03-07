@@ -9,6 +9,7 @@ import com.finzy.weathernow.BuildConfig;
 import com.finzy.weathernow.api.APIServices;
 import com.finzy.weathernow.api.RestClient;
 import com.finzy.weathernow.api.response.WeatherRes;
+import com.finzy.weathernow.models.PrefLocation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,12 +18,9 @@ import java.util.Objects;
 
 public class WeatherRepo {
 
-    APIServices apiServices;
-
+    private APIServices apiServices;
     private static WeatherRepo INSTANCE = null;
-
-    protected LocationManager locationManager;
-
+    private Call<WeatherRes> weatherResCall = null;
 
     public static WeatherRepo getInstance(Context context) {
         if (INSTANCE == null) {
@@ -31,24 +29,23 @@ public class WeatherRepo {
         return INSTANCE;
     }
 
-    public WeatherRepo(Context context) {
+    private WeatherRepo(Context context) {
         apiServices = RestClient.getInstance(context).get();
-        locationManager = (LocationManager) Objects.requireNonNull(context).getSystemService(Context.LOCATION_SERVICE);
-
     }
 
-    public LiveData<WeatherRes> getCurrentWeather(Location location) {
+    public LiveData<WeatherRes> getCurrentWeather(PrefLocation prefLocation) {
 
         final MutableLiveData<WeatherRes> data = new MutableLiveData<>();
 
-        Call<WeatherRes> weatherResCall = null;
-
-        if (location == null) {
+        if (prefLocation == null) {
             weatherResCall = apiServices.getCurrentWeather(BuildConfig.apiKey, "metric", 12.9716, 77.5946);
         } else {
-            weatherResCall = apiServices.getCurrentWeather(BuildConfig.apiKey, "metric", location.getLatitude(), location.getLongitude());
+            weatherResCall = apiServices.getCurrentWeather(BuildConfig.apiKey, "metric", prefLocation.getLatitide(), prefLocation.getLongitude());
         }
 
+        /*if (weatherResCall != null) {
+            weatherResCall.cancel();
+        }*/
 
         weatherResCall.enqueue(new Callback<WeatherRes>() {
             @Override

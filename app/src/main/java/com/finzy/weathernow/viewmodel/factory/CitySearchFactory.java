@@ -5,24 +5,24 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.location.Location;
-import com.finzy.weathernow.models.PrefLocation;
+import com.finzy.weathernow.viewmodel.CitySearchViewModel;
 import com.finzy.weathernow.viewmodel.WeatherViewModel;
 
-public class WeatherFactory implements ViewModelProvider.Factory {
+public class CitySearchFactory implements ViewModelProvider.Factory {
     private Application mApplication;
     private Context context;
-    private PrefLocation prefLocation;
+//    private String query;
 
 
-    public WeatherFactory(Application application, Context context, PrefLocation prefLocation) {
+    public CitySearchFactory(Application application, Context context/*, String query*/) {
         this.mApplication = application;
         this.context = context;
-        this.prefLocation = prefLocation;
+//        this.query = query;
     }
 
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        return (T) new WeatherViewModel(mApplication, context, prefLocation);
+        return (T) new CitySearchViewModel(mApplication, context/*, query*/);
     }
 }

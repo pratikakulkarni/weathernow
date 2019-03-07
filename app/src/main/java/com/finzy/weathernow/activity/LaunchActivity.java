@@ -65,7 +65,7 @@ public class LaunchActivity extends AppCompatActivity {
     public void enableNextActivity() {
         fullscreenContentControls.setVisibility(View.VISIBLE);
         butttonNext.setOnClickListener(v -> {
-            Intent intent = new Intent(LaunchActivity.this, MainActivity.class);
+            Intent intent = new Intent(LaunchActivity.this, CitySearchActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         });
@@ -94,7 +94,7 @@ public class LaunchActivity extends AppCompatActivity {
 
         if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
             switch (requestCode) {
-                //Location
+                //PrefLocation
                 case 1:
                     askForGPS();
                     break;
@@ -120,7 +120,7 @@ public class LaunchActivity extends AppCompatActivity {
                 } catch (ApiException exception) {
                     switch (exception.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            // Location settings are not satisfied. But could be fixed by showing the
+                            // PrefLocation settings are not satisfied. But could be fixed by showing the
                             // user a dialog.
                             try {
                                 // Cast to a resolvable exception.
@@ -137,7 +137,7 @@ public class LaunchActivity extends AppCompatActivity {
                             }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            // Location settings are not satisfied. However, we have no way to fix the
+                            // PrefLocation settings are not satisfied. However, we have no way to fix the
                             // settings so we won't show the dialog.
                             break;
                     }

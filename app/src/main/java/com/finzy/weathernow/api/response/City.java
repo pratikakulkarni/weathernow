@@ -1,0 +1,64 @@
+package com.finzy.weathernow.api.response;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+public class City {
+
+    @SerializedName("id")
+    @Expose
+    private double id;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("coord")
+    @Expose
+    private Coord coord;
+    @SerializedName("country")
+    @Expose
+    private String country;
+    @SerializedName("population")
+    @Expose
+    private double population;
+
+    public double getId() {
+        return id;
+    }
+
+    public void setId(double id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Coord getCoord() {
+        return coord;
+    }
+
+    public void setCoord(Coord coord) {
+        this.coord = coord;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public double getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(double population) {
+        this.population = population;
+    }
+
+}

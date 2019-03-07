@@ -2,6 +2,7 @@ package com.finzy.weathernow.fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.finzy.weathernow.R;
+import com.finzy.weathernow.models.PrefLocation;
 import com.finzy.weathernow.viewmodel.ForecastViewModel;
 import com.finzy.weathernow.viewmodel.factory.ForecastFactory;
 
@@ -17,7 +19,8 @@ public class ForecastFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ForecastFragment() {
+    private PrefLocation prefLocation;
+    /*public ForecastFragment() {
         // Required empty public constructor
     }
 
@@ -27,13 +30,13 @@ public class ForecastFragment extends Fragment {
 
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
+            prefLocation = getArguments().getParcelable("location");
         }
     }
 
@@ -44,11 +47,11 @@ public class ForecastFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_forecast, container, false);
 
         final ForecastViewModel viewModel = ViewModelProviders
-                .of(this, new ForecastFactory(getActivity().getApplication(), getActivity()))
+                .of(this, new ForecastFactory(getActivity().getApplication(), getActivity(), prefLocation))
                 .get(ForecastViewModel.class);
 
         viewModel.getForecaseResponseObservable().observe(this, forecastRes -> {
-                Toast.makeText(getActivity(), forecastRes.getCity().getName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), forecastRes.getCity().getName(), Toast.LENGTH_SHORT).show();
         });
 
         return view;

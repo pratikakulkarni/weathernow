@@ -15,11 +15,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="title_activity_launch">LaunchActivity</string>
     <string name="next">NEXT</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="weather">WEATHER</string>
     <string name="now">NOW</string>
     <string name="by_pratik">by Pratik</string>
+    <string name="search_city">Search your city</string>
+    <string name="skip">Skip</string>
 </resources>
