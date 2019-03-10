@@ -4,9 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
-import android.location.Location;
 import com.finzy.weathernow.viewmodel.CitySearchViewModel;
-import com.finzy.weathernow.viewmodel.WeatherViewModel;
 
 public class CitySearchFactory implements ViewModelProvider.Factory {
     private Application mApplication;

@@ -1,4 +1,4 @@
-package com.finzy.weathernow.api.repo;
+package com.finzy.weathernow.repo;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;

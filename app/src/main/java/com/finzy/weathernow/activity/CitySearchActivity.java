@@ -3,7 +3,10 @@ package com.finzy.weathernow.activity;
 import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +21,6 @@ import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.finzy.weathernow.R;
 import com.finzy.weathernow.adapter.CitySearchAdapter;
 import com.finzy.weathernow.api.response.CityInfoRes;
@@ -27,11 +29,10 @@ import com.finzy.weathernow.utils.LocationPreferences;
 import com.finzy.weathernow.viewmodel.CitySearchViewModel;
 import com.finzy.weathernow.viewmodel.factory.CitySearchFactory;
 import com.finzy.weathernow.widget.RemoteFetchService;
-import com.finzy.weathernow.widget.WeatherAppWidget;
-import jp.wasabeef.glide.transformations.BlurTransformation;
 
 import java.util.ArrayList;
 
+import static android.content.Intent.*;
 import static com.finzy.weathernow.widget.RemoteFetchService.BROADCAST_ACTION;
 
 public class CitySearchActivity extends AppCompatActivity {
@@ -52,7 +53,6 @@ public class CitySearchActivity extends AppCompatActivity {
 
     //widget
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +62,9 @@ public class CitySearchActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Glide.with(this)
-                .load(R.drawable.weather_background)
+                .load(R.drawable.city_background)
                 .centerCrop()
-                .apply((RequestOptions.bitmapTransform(new BlurTransformation(25, 1))))
+//                .apply((RequestOptions.bitmapTransform(new BlurTransformation(25, 1))))
                 .into(imageView_background);
 
         viewModel = ViewModelProviders
@@ -98,6 +98,7 @@ public class CitySearchActivity extends AppCompatActivity {
                 });
             }
         });
+
 
         setResult(RESULT_CANCELED);
 
@@ -145,7 +146,7 @@ public class CitySearchActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_skip:
                 Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
         }
@@ -169,6 +170,7 @@ public class CitySearchActivity extends AppCompatActivity {
         Intent intent = new Intent(context.getApplicationContext(),
                 RemoteFetchService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+        intent.putExtra(RemoteFetchService.LOCATION_CHANGED, true);
 
         // Update the widgets via the service
         context.startService(intent);
@@ -178,16 +180,27 @@ public class CitySearchActivity extends AppCompatActivity {
         super();
     }
 
-
     public void notifyWidget() {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(CitySearchActivity.this);
-        WeatherAppWidget.updateAppWidget(CitySearchActivity.this, appWidgetManager, mAppWidgetId);
-
-        // Make sure we pass back the original appWidgetId
-        Intent resultValue = new Intent();
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-        setResult(RESULT_OK, resultValue);
-        finish();
+        /*Intent intent = new Intent(this, WeatherAppWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), WeatherAppWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);*/
+        if (getIntent().getExtras() != null) {
+            /*AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(CitySearchActivity.this);
+            WeatherAppWidget.updateAppWidget(CitySearchActivity.this, appWidgetManager, mAppWidgetId);*/
+            Intent resultValue = new Intent();
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+            setResult(RESULT_OK, resultValue);
+            finish();
+        } else {
+            Intent mainAct = new Intent(CitySearchActivity.this, MainActivity.class);
+            mainAct.setFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
+            mainAct.putExtra(RemoteFetchService.LOCATION_CHANGED, true);
+            startActivity(mainAct);
+            finish();
+        }
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -208,7 +221,5 @@ public class CitySearchActivity extends AppCompatActivity {
         super.onPause();
         if (broadcastReceiver != null)
             unregisterReceiver(broadcastReceiver);
-        if (intent != null)
-            stopService(intent);
     }
 }

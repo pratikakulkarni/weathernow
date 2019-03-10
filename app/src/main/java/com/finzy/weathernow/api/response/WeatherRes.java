@@ -28,7 +28,7 @@ public class WeatherRes {
     private Clouds clouds;
     @SerializedName("dt")
     @Expose
-    private int dt;
+    private long dt;
     @SerializedName("sys")
     @Expose
     private Sys sys;
@@ -96,11 +96,11 @@ public class WeatherRes {
         this.clouds = clouds;
     }
 
-    public int getDt() {
+    public long getDt() {
         return dt;
     }
 
-    public void setDt(int dt) {
+    public void setDt(long dt) {
         this.dt = dt;
     }
 

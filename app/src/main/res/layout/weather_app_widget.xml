@@ -1,21 +1,32 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:background="@drawable/background"
         android:layout_height="wrap_content"
         android:padding="@dimen/widget_margin">
-    <!--
-            android:background="@color/black"
-    -->
 
     <ImageView
             android:id="@+id/imageView_Season"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_sun"
+            android:src="@drawable/ic_sun_ico"
             android:adjustViewBounds="true"
-            android:minHeight="100dp"
-            android:minWidth="100dp"/>
+            android:minHeight="75dp"
+            android:minWidth="75dp"
+            android:maxHeight="100dp"
+            android:maxWidth="100dp"/>
+
+    <!--<ImageView
+            android:id="@+id/imageView_Info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_info"
+            android:tint="@color/white"
+            android:adjustViewBounds="true"
+            android:layout_alignEnd="@+id/imageView_Season"
+            android:layout_alignBottom="@+id/imageView_Season"/>-->
+
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -25,28 +36,60 @@
             android:layout_toEndOf="@+id/imageView_Season"
             android:layout_height="wrap_content">
 
-        <TextView
-                android:id="@+id/textView_cityName"
-                android:layout_width="wrap_content"
-                android:text="City Name"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimary"
-                android:layout_height="wrap_content"/>
-
         <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+        >
+            <TextView
+                    android:id="@+id/textView_cityName"
+                    android:layout_width="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:layout_height="wrap_content"/>
+
+            <ImageView
+                    android:id="@+id/imageView_Info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_info"
+                    android:tint="@color/white"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:layout_alignEnd="@+id/imageView_Season"
+                    android:layout_alignBottom="@+id/imageView_Season"/>
+
+            <ImageView
+                    android:id="@+id/textView_EditCity"
+                    android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content"
+                    android:text="Change City"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_edit"
+                    android:tint="@color/white"
+                    android:drawableTint="@color/white"
+                    android:textColor="@color/white"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
 
             <TextView
-                    android:text="TextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView_Temp"
+                    android:gravity="center_vertical"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/colorPrimary"/>
+                    android:layout_weight="1"
+                    android:textColor="@color/white"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -58,44 +101,57 @@
 
 
             <TextView
-                    android:text="TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView_maxTemp"
-                    android:textColor="@color/colorPrimary"/>
+                    android:textColor="@color/white"/>
 
             <TextView
                     android:text="/"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:layout_margin="4dp"
-                    android:textColor="@color/colorPrimary"/>
+                    android:textColor="@color/white"/>
 
             <TextView
-                    android:text="TextView"
+                    android:gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/white"
                     android:id="@+id/textView_minTemp"/>
         </LinearLayout>
 
         <TextView
-                android:text="TextView"
                 android:layout_width="wrap_content"
+                android:gravity="center_vertical"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_WindSpeed"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/white"/>
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
             <TextView
-                    android:text="TextView"
                     android:layout_width="wrap_content"
+                    android:gravity="center_vertical"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView_Weather"
-                    android:textColor="@color/colorPrimary"/>
+                    android:textColor="@color/white"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/textView_updateAt"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:layout_height="wrap_content"/>
         </LinearLayout>
 
     </LinearLayout>

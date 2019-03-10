@@ -4,7 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
-import com.finzy.weathernow.api.repo.CitySearchRepo;
+import com.finzy.weathernow.repo.CitySearchRepo;
 import com.finzy.weathernow.api.response.CityInfoRes;
 
 public class CitySearchViewModel extends AndroidViewModel {

@@ -10,11 +10,19 @@
             android:name="com.finzy.weathernow.fragment.WeatherFragment"
             android:label="fragment_home"
             tools:layout="@layout/fragment_home">
-        <action android:id="@+id/action_homeFragment_to_forecastFragment" app:destination="@id/forecastFragment"/>
+        <action android:id="@+id/action_homeFragment_to_forecastFragment"
+                app:destination="@id/forecastFragment"/>
+        <argument android:name="LOCATION_CHANGED"
+                  app:argType="boolean"
+                  android:defaultValue="false"/>
     </fragment>
-    <fragment android:id="@+id/forecastFragment" android:name="com.finzy.weathernow.fragment.ForecastFragment"
-              android:label="fragment_forecast" tools:layout="@layout/fragment_forecast">
-        <argument android:name="location" app:argType="android.location.Location" app:nullable="true"
-                  android:defaultValue="@null"/>
+
+
+    <fragment android:id="@+id/forecastFragment"
+              android:name="com.finzy.weathernow.fragment.ForecastFragment"
+              android:label="fragment_forecast"
+              tools:layout="@layout/fragment_forecast">
+        <argument android:name="location"
+                  app:argType="com.finzy.weathernow.models.PrefLocation"/>
     </fragment>
 </navigation>

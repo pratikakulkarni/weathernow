@@ -1,14 +1,12 @@
-package com.finzy.weathernow.api.repo;
+package com.finzy.weathernow.repo;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
-import android.location.Location;
 import com.finzy.weathernow.BuildConfig;
 import com.finzy.weathernow.api.APIServices;
 import com.finzy.weathernow.api.RestClient;
 import com.finzy.weathernow.api.response.ForecastRes;
-import com.finzy.weathernow.api.response.WeatherRes;
 import com.finzy.weathernow.models.PrefLocation;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,8 +17,6 @@ public class ForecastRepo {
     private APIServices apiServices;
 
     private static ForecastRepo INSTANCE = null;
-    private Call<WeatherRes> weatherResCall = null;
-
 
     public static ForecastRepo getInstance(Context context) {
         if (INSTANCE == null) {

@@ -8,6 +8,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.finzy.weathernow.BuildConfig;
 import com.finzy.weathernow.R;
+import com.finzy.weathernow.utils.ConnectivityInterceptor;
 import com.finzy.weathernow.utils.CustomDialog;
 import org.json.JSONObject;
 
@@ -26,10 +27,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static org.apache.http.params.CoreConnectionPNames.CONNECTION_TIMEOUT;
 
-
-/**
- * Created by Simeio Solutions on 9/7/2016.
- */
 public class RestClient {
 
     public static String TAG = RestClient.class.getCanonicalName();
@@ -157,6 +154,9 @@ public class RestClient {
                     .addInterceptor(interceptor)
                     .addInterceptor(interceptCode);
 
+            if (mContext instanceof Activity) {
+                builder.addInterceptor(new ConnectivityInterceptor((Activity) mContext));
+            }
 
             OkHttpClient client = builder.build();
 

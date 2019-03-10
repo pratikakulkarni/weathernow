@@ -1,10 +1,8 @@
-package com.finzy.weathernow.api.repo;
+package com.finzy.weathernow.repo;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
-import android.location.Location;
-import android.location.LocationManager;
 import com.finzy.weathernow.BuildConfig;
 import com.finzy.weathernow.api.APIServices;
 import com.finzy.weathernow.api.RestClient;
@@ -13,8 +11,6 @@ import com.finzy.weathernow.models.PrefLocation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import java.util.Objects;
 
 public class WeatherRepo {
 

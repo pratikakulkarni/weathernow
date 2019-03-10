@@ -1,9 +1,14 @@
 package com.finzy.weathernow.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -12,15 +17,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.finzy.weathernow.R;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.*;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.finzy.weathernow.models.PrefLocation;
+import com.finzy.weathernow.utils.LocationPreferences;
+
+import java.util.Objects;
+
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.finzy.weathernow.utils.GPSUtil.LOCATION;
+import static com.finzy.weathernow.utils.GPSUtil.askForGPS;
 
 public class LaunchActivity extends AppCompatActivity {
 
@@ -30,12 +38,8 @@ public class LaunchActivity extends AppCompatActivity {
     @BindView(R.id.button_next)
     Button butttonNext;
 
-    static final Integer LOCATION = 0x1;
-    static final Integer GPS_SETTINGS = 0x7;
-
-    //    GoogleApiClient client;
-    LocationRequest mLocationRequest;
-    Task<LocationSettingsResponse> result;
+    private PrefLocation prefLocation;
+    protected LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,26 +51,36 @@ public class LaunchActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+        registerReceiver(gpsReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (ContextCompat.checkSelfPermission(LaunchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    askForPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION);
+                if (LocationPreferences.loadTitlePref(LaunchActivity.this) == null) {
+                    if (ContextCompat.checkSelfPermission(LaunchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        askForPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION);
+                    } else {
+                        getCurrentLocation();
+                        enableNextActivity();
+                    }
                 } else {
                     enableNextActivity();
+                    butttonNext.performClick();
                 }
 
             }
         }, 2000);
-
     }
 
     public void enableNextActivity() {
+        /*if (ContextCompat.checkSelfPermission(LaunchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            askForGPS(LaunchActivity.this);
+        }*/
         fullscreenContentControls.setVisibility(View.VISIBLE);
         butttonNext.setOnClickListener(v -> {
-            Intent intent = new Intent(LaunchActivity.this, CitySearchActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Intent intent = new Intent(LaunchActivity.this, MainActivity.class);
+            intent.setFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
     }
@@ -81,8 +95,6 @@ public class LaunchActivity extends AppCompatActivity {
             } else {
                 ActivityCompat.requestPermissions(LaunchActivity.this, new String[]{permission}, requestCode);
             }
-        } else {
-            Toast.makeText(this, "" + permission + " is already granted.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -96,53 +108,64 @@ public class LaunchActivity extends AppCompatActivity {
             switch (requestCode) {
                 //PrefLocation
                 case 1:
-                    askForGPS();
+                    askForGPS(LaunchActivity.this);
                     break;
             }
         }
     }
 
-    private void askForGPS() {
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(30 * 1000);
-        mLocationRequest.setFastestInterval(5 * 1000);
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);
-        builder.setAlwaysShow(true);
-        result = LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
-        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
-            @Override
-            public void onComplete(Task<LocationSettingsResponse> task) {
-                try {
-                    LocationSettingsResponse response = task.getResult(ApiException.class);
-                    // All location settings are satisfied. The client can initialize location
-                    // requests here.
-                } catch (ApiException exception) {
-                    switch (exception.getStatusCode()) {
-                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            // PrefLocation settings are not satisfied. But could be fixed by showing the
-                            // user a dialog.
-                            try {
-                                // Cast to a resolvable exception.
-                                ResolvableApiException resolvable = (ResolvableApiException) exception;
-                                // Show the dialog by calling startResolutionForResult(),
-                                // and check the result in onActivityResult().
-                                resolvable.startResolutionForResult(
-                                        LaunchActivity.this,
-                                        GPS_SETTINGS);
-                            } catch (IntentSender.SendIntentException e) {
-                                // Ignore the error.
-                            } catch (ClassCastException e) {
-                                // Ignore, should be an impossible error.
-                            }
-                            break;
-                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            // PrefLocation settings are not satisfied. However, we have no way to fix the
-                            // settings so we won't show the dialog.
-                            break;
-                    }
+    public void getCurrentLocation() {
+        butttonNext.setText("Getting Location... (Skip)");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager = (LocationManager) Objects.requireNonNull(this).getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    prefLocation = new PrefLocation();
+                    prefLocation.setLatitide(location.getLatitude());
+                    prefLocation.setLongitude(location.getLongitude());
+                    LocationPreferences.saveLocationPref(LaunchActivity.this, prefLocation.getLatitide(),
+                            prefLocation.getLongitude());
+
+                    butttonNext.setText("Next");
+                    butttonNext.performClick();
+                    locationManager.removeUpdates(this);
                 }
-            }
-        });
+
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String s) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String s) {
+
+                }
+            });
+        }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (gpsReceiver != null) {
+            unregisterReceiver(gpsReceiver);
+        }
+    }
+
+    private BroadcastReceiver gpsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null && intent.getAction() != null &&
+                    intent.getAction().matches(LocationManager.PROVIDERS_CHANGED_ACTION)) {
+                getCurrentLocation();
+            }
+        }
+    };
 }

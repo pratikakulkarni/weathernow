@@ -4,10 +4,8 @@ import android.app.Application;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
-import android.location.Location;
 import com.finzy.weathernow.models.PrefLocation;
 import com.finzy.weathernow.viewmodel.ForecastViewModel;
-import com.finzy.weathernow.viewmodel.WeatherViewModel;
 
 public class ForecastFactory implements ViewModelProvider.Factory {
     private Application mApplication;

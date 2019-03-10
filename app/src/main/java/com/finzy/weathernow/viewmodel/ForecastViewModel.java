@@ -4,8 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
-import android.location.Location;
-import com.finzy.weathernow.api.repo.ForecastRepo;
+import com.finzy.weathernow.repo.ForecastRepo;
 import com.finzy.weathernow.api.response.ForecastRes;
 import com.finzy.weathernow.models.PrefLocation;
 
