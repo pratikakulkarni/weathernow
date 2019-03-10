@@ -6,7 +6,6 @@
                 tools:context=".fragment.WeatherFragment"
                 android:orientation="vertical">
     <ScrollView
-            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_above="@+id/linearLayout_viewDetails"
             android:layout_height="match_parent"

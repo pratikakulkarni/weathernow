@@ -2,9 +2,7 @@ package com.finzy.weathernow;
 
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import com.finzy.weathernow.api.response.ForecastRes;
 import com.finzy.weathernow.models.PrefLocation;
 import com.finzy.weathernow.repo.ForecastRepo;
