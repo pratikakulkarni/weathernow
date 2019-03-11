@@ -42,7 +42,7 @@ public class RemoteFetchService extends LifecycleService {
     }
 
     public void callWeatherAPI() {
-        WeatherRes tempWeather = WeatherPreferences.loadTitlePref(this);
+        WeatherRes tempWeather = WeatherPreferences.loadCurretnWeather(this);
         long hours = -1;
         if (tempWeather != null) {
             hours = TimeUtil.getDiffInHours(tempWeather.getDt() * 1000, Calendar.getInstance().getTimeInMillis());
@@ -55,7 +55,7 @@ public class RemoteFetchService extends LifecycleService {
                 this.stopSelf();
                 return;
             }
-            PrefLocation locationMap = LocationPreferences.loadTitlePref(this);
+            PrefLocation locationMap = LocationPreferences.loadLocationPref(this);
             WeatherRepo.getInstance(this).getCurrentWeather(locationMap).observe(this, weatherRes -> {
                 if (weatherRes != null) {
                     updateData(weatherRes);
@@ -67,7 +67,7 @@ public class RemoteFetchService extends LifecycleService {
     public void updateData(WeatherRes weatherRes) {
         Log.d(LOG_TAG, "callWeatherAPI :: started");
         if (weatherRes != null) {
-            WeatherPreferences.saveLocationPref(RemoteFetchService.this, weatherRes);
+            WeatherPreferences.saveCurretnWeather(RemoteFetchService.this, weatherRes);
         }
 
         Intent customBroadcast = new Intent();

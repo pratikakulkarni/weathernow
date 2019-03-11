@@ -53,7 +53,7 @@ public class CityInfoRes {
         this.list = list;
     }
 
-    public class Clouds {
+    /*public class Clouds {
 
         @SerializedName("all")
         @Expose
@@ -69,7 +69,7 @@ public class CityInfoRes {
 
     }
 
-    /*public class Coord {
+    public class Coord {
 
         @SerializedName("lat")
         @Expose

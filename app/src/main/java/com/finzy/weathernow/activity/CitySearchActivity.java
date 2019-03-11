@@ -145,9 +145,11 @@ public class CitySearchActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_skip:
-                Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
+                /*Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
                 intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                startActivity(intent);*/
+                setResult(RESULT_CANCELED);
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -195,10 +197,9 @@ public class CitySearchActivity extends AppCompatActivity {
             setResult(RESULT_OK, resultValue);
             finish();
         } else {
-            Intent mainAct = new Intent(CitySearchActivity.this, MainActivity.class);
-            mainAct.setFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
+            Intent mainAct = new Intent();
             mainAct.putExtra(RemoteFetchService.LOCATION_CHANGED, true);
-            startActivity(mainAct);
+            setResult(RESULT_OK, mainAct);
             finish();
         }
     }

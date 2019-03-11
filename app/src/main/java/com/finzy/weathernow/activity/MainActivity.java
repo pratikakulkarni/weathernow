@@ -2,7 +2,6 @@ package com.finzy.weathernow.activity;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements WeatherFragment.O
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction() {
 
     }
 

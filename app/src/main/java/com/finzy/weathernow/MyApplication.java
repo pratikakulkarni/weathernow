@@ -10,12 +10,12 @@ public class MyApplication extends Application {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable e) {
-                handleUncaughtException(thread, e);
+                handleUncaughtException(e);
             }
         });
     }
 
-    public void handleUncaughtException(Thread thread, Throwable e) {
+    public void handleUncaughtException(Throwable e) {
         e.printStackTrace(); // not all Android versions will print the stack trace automatically
 
         /*Intent intent = new Intent();

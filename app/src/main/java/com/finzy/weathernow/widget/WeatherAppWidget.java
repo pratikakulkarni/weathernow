@@ -22,7 +22,7 @@ public class WeatherAppWidget extends AppWidgetProvider {
 
     public final static String LOG_TAG = WeatherAppWidget.class.getCanonicalName();
 
-    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+    public static void updateAppWidget(Context context, int appWidgetId) {
 
         // Build the intent to call the service
         Intent intent = new Intent(context.getApplicationContext(),
@@ -44,7 +44,7 @@ public class WeatherAppWidget extends AppWidgetProvider {
     public void onDeleted(Context context, int[] appWidgetIds) {
         // When the user deletes the widget, delete the preference associated with it.
         for (int appWidgetId : appWidgetIds) {
-            WeatherPreferences.deleteTitlePref(context);
+            WeatherPreferences.deleteCurretnWeather(context);
         }
     }
 
@@ -63,7 +63,7 @@ public class WeatherAppWidget extends AppWidgetProvider {
      * to do necessary action and here action == WidgetProvider.DATA_FETCHED
      */
     private static void populateWidget(Context context, int widgetId) {
-        WeatherRes weatherRes = WeatherPreferences.loadTitlePref(context);
+        WeatherRes weatherRes = WeatherPreferences.loadCurretnWeather(context);
 
         Log.d(LOG_TAG, "populateWidget :: started");
 

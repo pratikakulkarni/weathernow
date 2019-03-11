@@ -1,5 +1,6 @@
 package com.finzy.weathernow.fragment;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +53,8 @@ public class WeatherFragment extends Fragment {
     private WeatherRes weatherRes;
     private boolean isLocationChanged = false;
 
+    public static int REQ_CODE_LOCATION = 0x123;
+
     public WeatherFragment() {
         // Required empty public constructor
     }
@@ -72,7 +75,7 @@ public class WeatherFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        prefLocation = LocationPreferences.loadTitlePref(getActivity());
+        prefLocation = LocationPreferences.loadLocationPref(getActivity());
         if (prefLocation == null) {
             prefLocation = new PrefLocation(12.9716, 77.5946);
             Toast.makeText(getActivity(), "Could not get current location. Displaying weather for default city.", Toast.LENGTH_LONG).show();
@@ -80,7 +83,7 @@ public class WeatherFragment extends Fragment {
 
         imageView_EditLocation.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), CitySearchActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQ_CODE_LOCATION);
         });
 
         Bundle bundle = new Bundle();
@@ -93,13 +96,12 @@ public class WeatherFragment extends Fragment {
             }
         });
 
-        weatherRes = WeatherPreferences.loadTitlePref(getActivity());
+        weatherRes = WeatherPreferences.loadCurretnWeather(getActivity());
         long hours = -1;
         if (weatherRes != null) {
             hours = TimeUtil.getDiffInHours(weatherRes.getDt() * 1000, Calendar.getInstance().getTimeInMillis());
         }
         if (!isLocationChanged && hours != -1 && hours < Constants.UPDATE_TIME) {
-//            Toast.makeText(getActivity(), "Already up to date.", Toast.LENGTH_SHORT).show();
             setCurrentWeather(weatherRes);
         } else {
             getWeatherUpdates(prefLocation);
@@ -108,18 +110,33 @@ public class WeatherFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_CODE_LOCATION) {
+            if (resultCode == Activity.RESULT_OK) {
+                prefLocation = LocationPreferences.loadLocationPref(getActivity());
+                getWeatherUpdates(prefLocation);
+            }
+        }
+    }
+
     private void getWeatherUpdates(PrefLocation prefLocation) {
         layout_Loading.setVisibility(View.VISIBLE);
         final WeatherViewModel viewModel = ViewModelProviders
                 .of(this, new WeatherFactory(getActivity().getApplication(), getActivity(), prefLocation))
                 .get(WeatherViewModel.class);
 
-        viewModel.getNewsResponseObservable().observe(this, this::setCurrentWeather);
+        viewModel.getNewsResponseObservable().observe(this, weather -> {
+            this.weatherRes = weather;
+            if (weather != null) {
+                WeatherPreferences.saveCurretnWeather(getActivity(), weatherRes);
+            }
+            setCurrentWeather(weather);
+        });
     }
 
     public void setCurrentWeather(WeatherRes weatherRes) {
         layout_Loading.setVisibility(View.GONE);
-
         if (weatherRes != null) {
             textView_Temp.setText(Double.toString(weatherRes.getMain().getTemp()) + (char) 0x00B0);
             try {
@@ -137,7 +154,7 @@ public class WeatherFragment extends Fragment {
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onFragmentInteraction();
         }
     }
 
@@ -159,6 +176,6 @@ public class WeatherFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction();
     }
 }

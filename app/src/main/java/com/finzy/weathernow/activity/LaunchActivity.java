@@ -57,7 +57,7 @@ public class LaunchActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (LocationPreferences.loadTitlePref(LaunchActivity.this) == null) {
+                if (LocationPreferences.loadLocationPref(LaunchActivity.this) == null) {
                     if (ContextCompat.checkSelfPermission(LaunchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         askForPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION);
                     } else {

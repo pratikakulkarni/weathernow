@@ -7,6 +7,7 @@ import com.finzy.weathernow.models.PrefLocation;
 public class LocationPreferences {
 
     private static final String PREFS_NAME = "com.finzy.weathernow.model.PrefLocation";
+
     private static final String PREF_PREFIX_KEY = "_appwidget";
     public static final String LAT = "LAT";
     public static final String LON = "LON";
@@ -18,7 +19,7 @@ public class LocationPreferences {
         prefs.apply();
     }
 
-    public static PrefLocation loadTitlePref(Context context) {
+    public static PrefLocation loadLocationPref(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         String lat = prefs.getString(LAT + PREF_PREFIX_KEY, null);
         String lon = prefs.getString(LON + PREF_PREFIX_KEY, null);
@@ -31,7 +32,7 @@ public class LocationPreferences {
         return targetLocation;
     }
 
-    public static void deleteTitlePref(Context context) {
+    public static void deleteLocationPref(Context context) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.remove(LAT + PREF_PREFIX_KEY);
         prefs.remove(LON + PREF_PREFIX_KEY);

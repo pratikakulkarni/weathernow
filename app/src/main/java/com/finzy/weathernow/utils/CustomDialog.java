@@ -14,13 +14,13 @@ public class CustomDialog {
         void isTextEntered(String typedString);
     }
 
-    public static void displayInfoDialog(final Activity activity, String title, String msg, String confirmButtonText) {
+    /*public static void displayInfoDialog(final Activity activity, String title, String msg, String confirmButtonText) {
         CustomDialog.commonDialog(activity,
                 title,
                 msg,
                 confirmButtonText,
                 null, null, null);
-    }
+    }*/
 
     public static void commonDialog(final Activity activity, String title, String msg, String confirmButtonText, View.OnClickListener onClickListener) {
 
